@@ -24,11 +24,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const modalCancelBtn = document.getElementById("modal-cancel-btn");
   const backToTitleBtn = document.getElementById("back-to-title-btn");
 
-  // Home screen elements - ADD THESE MISSING SELECTIONS
+  // Home screen elements
   const homeScreen = document.getElementById("home-screen");
   const startNewGameBtn = document.getElementById("start-new-game-btn");
   const continueGameBtn = document.getElementById("continue-game-btn");
   const homeStageSelectBtn = document.getElementById("home-stage-select-btn");
+
+  // Ranking modal elements
+  const rankingBtn = document.getElementById("ranking-btn");
+  const rankingModal = document.getElementById("ranking-modal");
+  const rankingCloseBtn = document.getElementById("ranking-close-btn");
 
   // Audio Elements
   const bgm = document.getElementById("bgm");
@@ -43,39 +48,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const BOARD_WIDTH = 550;
   const BOARD_HEIGHT = 400;
   const ALL_TILE_TYPES = [
-    "🐶",
-    "🐱",
-    "🐭",
-    "🐹",
-    "🐰",
-    "🦊",
-    "🐻",
-    "🐼",
-    "🐨",
-    "🐯",
-    "🦁",
-    "🐮",
-    "🐷",
-    "🐸",
-    "🐵",
-    "🐔",
-    "🐧",
-    "🐦",
-    "🐤",
-    "🦆",
-    "🦄",
-    "🦖",
-    "🐙",
-    "🦀",
-    "🐠",
-    "🐳",
-    "🦋",
-    "🐞",
-    "🐢",
-    "🐍",
-    "🦎",
-    "🦂",
-    "🦓",
+    "🐶", "🐱", "🐭", "🐹", "🐰", "🦊", "🐻", "🐼", "🐨", "🐯",
+    "🦁", "🐮", "🐷", "🐸", "🐵", "🐔", "🐧", "🐦", "🐤", "🦆",
+    "🦄", "🦖", "🐙", "🦀", "🐠", "🐳", "🦋", "🐞", "🐢", "🐍",
+    "🦎", "🦂", "🦓",
   ];
   const INITIAL_COINS = 100;
   const INITIAL_MAX_SLOTS = 8;
@@ -93,8 +69,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let coins = 0;
   let maxSlots = INITIAL_MAX_SLOTS;
   let currentLevel = 1;
-  let maxReachedLevel = 1; // 到達した最大ステージを記憶
-  let bgmStarted = false; // BGM開始フラグ
+  let maxReachedLevel = 1;
+  let bgmStarted = false;
   let isMatching = false;
 
   // --- Progress Management Functions ---
@@ -107,7 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (savedMaxLevel) {
       maxReachedLevel = parseInt(savedMaxLevel);
     } else {
-      maxReachedLevel = 1; // 初回プレイ時は1
+      maxReachedLevel = 1;
     }
   }
 
@@ -115,13 +91,12 @@ document.addEventListener("DOMContentLoaded", () => {
     if (level > maxReachedLevel) {
       maxReachedLevel = level;
       saveProgress();
-      updateLevelSelectOptions(); // ステージセレクトの選択肢を更新
-      updateProgressDisplay(); // 進捗表示を更新
+      updateLevelSelectOptions();
+      updateProgressDisplay();
     }
   }
 
   function updateLevelSelectOptions() {
-    // メイン画面のステージセレクトの選択肢を更新
     if (startLevelSelect) {
       startLevelSelect.innerHTML = "";
       for (let i = 1; i <= maxReachedLevel; i++) {
@@ -133,11 +108,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         startLevelSelect.appendChild(option);
       }
-      // 現在のレベルを選択状態にする
       startLevelSelect.value = currentLevel;
     }
 
-    // モーダルのステージセレクトの選択肢も更新
     if (modalLevelSelect) {
       modalLevelSelect.innerHTML = "";
       for (let i = 1; i <= maxReachedLevel; i++) {
@@ -159,8 +132,6 @@ document.addEventListener("DOMContentLoaded", () => {
       homeScreen.style.display = "flex";
       homeScreen.classList.remove("hidden");
       document.body.classList.remove("game-mode");
-
-      // プログレスを確認してボタンを表示
       updateHomeButtons();
     }
   }
@@ -181,12 +152,46 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // --- Ranking Modal Functions ---
+  function showRankingModal() {
+    renderRanking();
+    updateProgressDisplay();
+    if (rankingModal) {
+      rankingModal.style.display = "flex";
+      setTimeout(() => {
+        rankingModal.classList.add("show");
+      }, 10);
+    }
+  }
+
+  function hideRankingModal() {
+    if (rankingModal) {
+      rankingModal.classList.remove("show");
+      setTimeout(() => {
+        rankingModal.style.display = "none";
+      }, 300);
+    }
+  }
+
   // --- Event Listeners ---
   if (undoBtn) undoBtn.addEventListener("click", useUndo);
   if (shuffleBtn) shuffleBtn.addEventListener("click", useShuffle);
   if (hintBtn) hintBtn.addEventListener("click", useHint);
   if (resetBtn) resetBtn.addEventListener("click", useReset);
   if (clearRankingBtn) clearRankingBtn.addEventListener("click", clearRanking);
+
+  // Ranking button event listener
+  if (rankingBtn) {
+    rankingBtn.addEventListener("click", () => {
+      showRankingModal();
+    });
+  }
+
+  if (rankingCloseBtn) {
+    rankingCloseBtn.addEventListener("click", () => {
+      hideRankingModal();
+    });
+  }
 
   if (startGameBtn) {
     startGameBtn.addEventListener("click", () => {
@@ -196,20 +201,17 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ステージセレクトボタンのイベントリスナー
   if (stageSelectBtn) {
     stageSelectBtn.addEventListener("click", () => {
       showStageSelectModal();
     });
   }
 
-  // モーダル内のボタンイベント
   if (modalStartBtn) {
     modalStartBtn.addEventListener("click", () => {
       const selectedLevel = parseInt(modalLevelSelect.value);
       hideStageSelectModal();
 
-      // ホーム画面から選択された場合
       if (homeScreen && homeScreen.style.display !== "none") {
         hideHomeScreen();
       }
@@ -225,7 +227,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ホーム画面のイベントリスナー
   if (startNewGameBtn) {
     startNewGameBtn.addEventListener("click", () => {
       hideHomeScreen();
@@ -240,7 +241,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if (loadGameState()) {
         showGameElements();
       } else {
-        // セーブデータがない場合は新しいゲームを開始
         setupGameForLevel(maxReachedLevel);
         showGameElements();
       }
@@ -253,7 +253,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // タイトルに戻るボタンのイベントリスナー
   if (backToTitleBtn) {
     backToTitleBtn.addEventListener("click", () => {
       backToTitle();
@@ -263,7 +262,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- Audio Functions ---
   function playSE(audioElement) {
     if (audioElement) {
-      // 既に再生中の場合は停止してからリセット
       audioElement.pause();
       audioElement.currentTime = 0;
       audioElement.play().catch((e) => console.log("Audio play failed:", e));
@@ -272,7 +270,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function startBGM() {
     if (bgm && !bgmStarted) {
-      bgm.volume = 0.3; // BGMの音量を少し下げる
+      bgm.volume = 0.3;
       bgm.play().catch((e) => console.log("BGM autoplay failed:", e));
       bgmStarted = true;
     }
@@ -284,17 +282,15 @@ document.addEventListener("DOMContentLoaded", () => {
     for (let i = 0; i < particleCount; i++) {
       const particle = document.createElement("div");
 
-      // 星とドットを混ぜる
       if (i % 2 === 0) {
         particle.className = "particle star";
       } else {
         particle.className = "particle";
       }
 
-      particle.style.left = `${x + 25}px`; // タイルの中心
+      particle.style.left = `${x + 25}px`;
       particle.style.top = `${y + 25}px`;
 
-      // ランダムな方向に飛ぶ
       const angle = (i / particleCount) * Math.PI * 2;
       const velocity = 30 + Math.random() * 20;
       const dx = Math.cos(angle) * velocity;
@@ -306,7 +302,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if (slotContainer) {
         slotContainer.appendChild(particle);
 
-        // アニメーション終了後にパーティクルを削除
         setTimeout(() => {
           if (particle.parentNode) {
             particle.parentNode.removeChild(particle);
@@ -332,15 +327,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function animateRemoveTiles(tilesToRemove) {
     return new Promise((resolve) => {
-      // フラッシュエフェクトを表示
       createFlashEffect();
 
-      // 各タイルにアニメーションを適用
       tilesToRemove.forEach((tile, index) => {
         setTimeout(() => {
           tile.element.classList.add("removing");
 
-          // タイルの位置を取得してパーティクルエフェクトを作成
           const rect = tile.element.getBoundingClientRect();
           const slotRect = slotContainer.getBoundingClientRect();
           const x = rect.left - slotRect.left;
@@ -350,31 +342,23 @@ document.addEventListener("DOMContentLoaded", () => {
         }, index * 100);
       });
 
-      // ───────────────────────────────────────────────────────
-      // アニメーション完了後に実際にタイルを削除
       setTimeout(() => {
-        // ① 削除対象タイルのインデックス一覧を取得
-        //    findIndex() で現在の slotTiles 内の位置を調べる
         const indices = tilesToRemove
           .map((tile) => slotTiles.findIndex((t) => t.id === tile.id))
-          .filter((idx) => idx > -1) // -1（見つからなかったもの）は除外
-          .sort((a, b) => b - a); // 降順（こうじゅん）にソート
+          .filter((idx) => idx > -1)
+          .sort((a, b) => b - a);
 
-        // ② 大きいインデックスから splice（スプライス）で削除
-        //    splice: 配列の特定位置から要素を取り出すメソッド
         indices.forEach((idx) => {
           slotTiles.splice(idx, 1);
         });
 
-        // ③ DOM 要素を親ノードから削除
         tilesToRemove.forEach((tile) => {
           if (tile.element.parentNode) {
             tile.element.parentNode.removeChild(tile.element);
           }
         });
-        // 削除後のゲーム状態を localStorage に保存
-        saveGameState();
 
+        saveGameState();
         resolve();
       }, 600 + tilesToRemove.length * 100);
     });
@@ -417,7 +401,7 @@ document.addEventListener("DOMContentLoaded", () => {
       coins: coins,
       maxSlots: maxSlots,
       currentLevel: currentLevel,
-      maxReachedLevel: maxReachedLevel, // 到達ステージも保存
+      maxReachedLevel: maxReachedLevel,
     };
     localStorage.setItem("zooEscapeGameState", JSON.stringify(gameState));
   }
@@ -447,7 +431,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return { element: tileElement, ...data };
       });
 
-      // moveHistory の復元を修正
       moveHistory = gameState.moveHistory.map((snapshot) => ({
         movedTile: snapshot.movedTile,
         slotTilesBeforeMatch: snapshot.slotTilesBeforeMatch,
@@ -458,7 +441,6 @@ document.addEventListener("DOMContentLoaded", () => {
       maxSlots = gameState.maxSlots;
       currentLevel = gameState.currentLevel;
 
-      // 到達ステージも復元（後方互換性のため、存在しない場合は現在のレベルを使用）
       if (gameState.maxReachedLevel !== undefined) {
         maxReachedLevel = gameState.maxReachedLevel;
       } else {
@@ -502,19 +484,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // --- Initial Game Start (on page load) ---
   function startGame() {
-    // プログレスを読み込み
     loadProgress();
-
-    // レベルセレクトの選択肢を初期化
     updateLevelSelectOptions();
-
-    // ホーム画面を表示
     showHomeScreen();
-
     renderRanking();
-    updateProgressDisplay(); // 進捗表示を初期化
+    updateProgressDisplay();
 
-    // BGMを開始（ユーザー操作後に再生）
     document.addEventListener(
       "click",
       function startBGMOnFirstClick() {
@@ -537,13 +512,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const controls = document.getElementById("controls");
     if (controls) controls.style.display = "flex";
-
-    const rankingContainer = document.getElementById("ranking-container");
-    if (rankingContainer) rankingContainer.style.display = "block";
   }
 
   function showStageSelectModal() {
-    updateLevelSelectOptions(); // 最新の選択肢で更新
+    updateLevelSelectOptions();
     if (stageSelectModal) {
       stageSelectModal.style.display = "flex";
       setTimeout(() => {
@@ -567,12 +539,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (startNewGameBtn && continueGameBtn && homeStageSelectBtn) {
       if (hasProgress) {
-        // 進捗がある場合：つづきから＋ステージセレクト
         startNewGameBtn.style.display = "none";
         continueGameBtn.style.display = "block";
         homeStageSelectBtn.style.display = "block";
       } else {
-        // 初回プレイ：はじめるのみ
         startNewGameBtn.style.display = "block";
         continueGameBtn.style.display = "none";
         homeStageSelectBtn.style.display = "none";
@@ -580,29 +550,19 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // タイトルに戻る機能
   function backToTitle() {
-    // 確認ダイアログを表示
     if (
       confirm(
         "ゲームを中断してタイトルに戻りますか？\n（進行状況は保存されます）"
       )
     ) {
-      // 現在のゲーム状態を保存
       saveGameState();
-
-      // ゲーム画面の要素を非表示
       hideGameElements();
-
-      // ホーム画面を表示
       showHomeScreen();
-
-      // プログレス表示を更新
       updateHomeButtons();
     }
   }
 
-  // ゲーム画面の要素を非表示にする関数
   function hideGameElements() {
     const header = document.querySelector(".header");
     if (header) header.style.display = "none";
@@ -612,12 +572,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const controls = document.getElementById("controls");
     if (controls) controls.style.display = "none";
 
-    const rankingContainer = document.getElementById("ranking-container");
-    if (rankingContainer) rankingContainer.style.display = "none";
-
     if (levelSelectionScreen) levelSelectionScreen.style.display = "none";
 
-    // body のクラスも削除
     document.body.classList.remove("game-mode");
   }
 
@@ -661,22 +617,17 @@ document.addEventListener("DOMContentLoaded", () => {
     let tileIndex = 0;
     for (let i = 0; i < totalTileCount; i++) {
       const tile = createTileElement(tileData[tileIndex], tileIndex);
-      const zIndex = tileIndex; // Z-index based on creation order
+      const zIndex = tileIndex;
 
-      // Generate random position within board boundaries
-      // Ensure there's enough space for the tile itself
       let randomX = Math.random() * (BOARD_WIDTH - TILE_WIDTH);
       let randomY = Math.random() * (BOARD_HEIGHT - TILE_HEIGHT);
 
-      // Add a very subtle stacking/overlap effect
-      // This will make tiles slightly offset from each other, creating a "layered" look
-      const subtleOverlapX = (Math.random() - 0.5) * 15; // +/- 7.5px
-      const subtleOverlapY = (Math.random() - 0.5) * 15; // +/- 7.5px
+      const subtleOverlapX = (Math.random() - 0.5) * 15;
+      const subtleOverlapY = (Math.random() - 0.5) * 15;
 
       let finalX = randomX + subtleOverlapX;
       let finalY = randomY + subtleOverlapY;
 
-      // Ensure tiles stay within board boundaries after adding subtle overlap
       finalX = Math.max(0, Math.min(finalX, BOARD_WIDTH - TILE_WIDTH));
       finalY = Math.max(0, Math.min(finalY, BOARD_HEIGHT - TILE_HEIGHT));
 
@@ -763,24 +714,22 @@ document.addEventListener("DOMContentLoaded", () => {
     if (slot) slot.appendChild(tile.element);
     slotTiles.push(tile);
 
-    // 移動前の状態をスナップショットとして保存
     const gameSnapshot = {
       movedTile: tile,
-      slotTilesBeforeMatch: [...slotTiles], // 移動後のスロット状態
+      slotTilesBeforeMatch: [...slotTiles],
       coinsBeforeMatch: coins,
     };
     moveHistory.push(gameSnapshot);
 
     sortSlot();
 
-    // 3つ揃った場合の効果音を事前にチェックして再生
     const willMatch = checkForMatches();
     if (willMatch) {
       console.log("消去音再生：移動時");
       playSE(seMatch);
     }
 
-    await checkSlotForMatches(); // マッチ処理を待つ
+    await checkSlotForMatches();
     updateTileStates();
     updateButtonStates();
     checkWinCondition();
@@ -794,7 +743,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // マッチするかどうかを事前にチェックする関数
   function checkForMatches() {
     const typeCounts = {};
     slotTiles.forEach((tile) => {
@@ -810,44 +758,34 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function checkSlotForMatches() {
-    // 同時実行ガード（アニメ中は中断）
     if (isMatching) return;
 
-    let found; // マッチがあったかのフラグ
+    let found;
     do {
-      // マッチ処理の開始をマーク
       isMatching = true;
       found = false;
 
-      // ① カウントを集計
       const typeCounts = {};
       slotTiles.forEach((tile) => {
         typeCounts[tile.type] = (typeCounts[tile.type] || 0) + 1;
       });
 
-      // ② どのタイプがちょうど3個か探す
       for (const type in typeCounts) {
         if (typeCounts[type] === 3) {
-          // 削除対象タイルを取得
           const tilesToRemove = slotTiles.filter((t) => t.type === type);
 
-          // ③ アニメーション＋削除
           await animateRemoveTiles(tilesToRemove);
 
-          // ④ 報酬・音声
           coins += REWARD_COINS;
           updateCoinDisplay();
           playSE(seMatch);
 
           found = true;
-          break; // 一度に1種類だけ処理
+          break;
         }
       }
 
-      // アニメーション完了後はガードを解除
       isMatching = false;
-
-      // ⑤ 「また3つ揃っていないか」ループで繰り返す
     } while (found);
   }
 
@@ -858,15 +796,12 @@ document.addEventListener("DOMContentLoaded", () => {
     coins -= COST_UNDO;
     updateCoinDisplay();
 
-    // 最後のスナップショットを取得
     const lastSnapshot = moveHistory.pop();
     const { movedTile, slotTilesBeforeMatch, coinsBeforeMatch } = lastSnapshot;
 
-    // スロットを完全にクリア
     if (slot) slot.innerHTML = "";
-    slotTiles.length = 0; // 配列をクリア
+    slotTiles.length = 0;
 
-    // 移動前の状態を復元：移動したタイルをボードに戻す
     const restoredBoardTile = createTileElement(movedTile.type, movedTile.id);
     restoredBoardTile.style.position = "absolute";
     restoredBoardTile.style.left = `${movedTile.x}px`;
@@ -883,7 +818,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     if (gameBoard) gameBoard.appendChild(restoredBoardTile);
 
-    // スナップショットからスロット状態を復元（移動したタイル以外のタイルを復活）
     slotTilesBeforeMatch.forEach((tile) => {
       if (tile.id !== movedTile.id) {
         const restoredSlotTile = createTileElement(tile.type, tile.id);
@@ -901,10 +835,8 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    // スロットをソート（マッチチェックは絶対に行わない）
     slotTiles.sort((a, b) => a.type.localeCompare(b.type));
 
-    // DOMの順序も更新
     if (slot) {
       slot.innerHTML = "";
       slotTiles.forEach((tile) => {
@@ -912,7 +844,6 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    // コインも移動前の状態に戻す
     coins = coinsBeforeMatch - COST_UNDO;
     updateCoinDisplay();
 
@@ -923,7 +854,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function useShuffle() {
     if (coins < COST_SHUFFLE) return;
-    // シャッフル音を再生
     playSE(document.getElementById("se-shuffle"));
     coins -= COST_SHUFFLE;
     updateCoinDisplay();
@@ -973,7 +903,6 @@ document.addEventListener("DOMContentLoaded", () => {
       updateButtonStates();
       saveGameState();
 
-      // ヒント音を再生
       playSE(document.getElementById("se-hint"));
 
       setTimeout(() => {
@@ -988,16 +917,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function useReset() {
     updateCoinDisplay();
-    setupGameForLevel(currentLevel); // Reset to current level
+    setupGameForLevel(currentLevel);
     saveGameState();
-  }
-
-  function useLevelReset() {
-    // ゲーム状態をクリア
-    localStorage.removeItem("zooEscapeGameState");
-
-    // モーダルを表示
-    showStageSelectModal();
   }
 
   // --- UI and Game State Updates ---
@@ -1028,7 +949,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function saveScore(score) {
     const scores = JSON.parse(localStorage.getItem("zooEscapeRanking") || "[]");
     scores.push({ score: score, date: new Date().toLocaleString() });
-    scores.sort((a, b) => b.score - a.score); // Sort descending
+    scores.sort((a, b) => b.score - a.score);
     localStorage.setItem("zooEscapeRanking", JSON.stringify(scores));
     renderRanking();
   }
@@ -1059,7 +980,6 @@ document.addEventListener("DOMContentLoaded", () => {
   function checkWinCondition() {
     if (boardTiles.length === 0 && slotTiles.length === 0) {
       setTimeout(() => {
-        // クリア時に到達ステージを更新
         updateMaxReachedLevel(currentLevel + 1);
         showStageClearAnimation();
         playSE(seWin);
@@ -1070,36 +990,29 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function showStageClearAnimation() {
-    // オーバーレイを作成
     const overlay = document.createElement("div");
     overlay.className = "stage-clear-overlay";
 
-    // ステージ画像を作成
     const stageImg = document.createElement("img");
     stageImg.src = "image/stage.png";
     stageImg.className = "stage-image";
     stageImg.alt = "Stage";
 
-    // クリア画像を作成
     const clearImg = document.createElement("img");
     clearImg.src = "image/clear.png";
     clearImg.className = "clear-image";
     clearImg.alt = "Clear";
 
-    // 画像コンテナを作成
     const imageContainer = document.createElement("div");
     imageContainer.className = "stage-clear-container";
 
-    // レベル番号を表示
     const levelText = document.createElement("div");
     levelText.className = "level-text";
     levelText.textContent = currentLevel;
 
-    // ボタンコンテナを作成
     const buttonContainer = document.createElement("div");
     buttonContainer.className = "clear-buttons";
 
-    // 次のステージボタン
     const nextStageBtn = document.createElement("button");
     nextStageBtn.className = "clear-button next-stage-btn";
     nextStageBtn.textContent = "次のステージ";
@@ -1112,7 +1025,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }, 500);
     });
 
-    // もう一度ボタン
     const retryBtn = document.createElement("button");
     retryBtn.className = "clear-button retry-btn";
     retryBtn.textContent = "もう一度";
@@ -1124,7 +1036,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }, 500);
     });
 
-    // ステージセレクトボタンを追加
     const stageSelectBtn = document.createElement("button");
     stageSelectBtn.className = "clear-button stage-select-btn";
     stageSelectBtn.textContent = "ステージセレクト";
@@ -1136,27 +1047,22 @@ document.addEventListener("DOMContentLoaded", () => {
       }, 500);
     });
 
-    // ボタンをコンテナに追加
     buttonContainer.appendChild(nextStageBtn);
     buttonContainer.appendChild(retryBtn);
     buttonContainer.appendChild(stageSelectBtn);
 
-    // 要素を組み立て
     imageContainer.appendChild(stageImg);
     imageContainer.appendChild(levelText);
     imageContainer.appendChild(clearImg);
     imageContainer.appendChild(buttonContainer);
     overlay.appendChild(imageContainer);
 
-    // ボディに追加
     document.body.appendChild(overlay);
 
-    // アニメーション開始
     setTimeout(() => {
       overlay.classList.add("show");
     }, 50);
 
-    // 2秒後にボタンを表示
     setTimeout(() => {
       buttonContainer.classList.add("show-buttons");
     }, 2000);
@@ -1172,25 +1078,20 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function showGameOverAnimation() {
-    // オーバーレイを作成
     const overlay = document.createElement("div");
     overlay.className = "game-over-overlay";
 
-    // ゲームオーバー画像を作成
     const gameOverImg = document.createElement("img");
     gameOverImg.src = "image/gameover.png";
     gameOverImg.className = "game-over-image";
     gameOverImg.alt = "Game Over";
 
-    // 画像コンテナを作成
     const imageContainer = document.createElement("div");
     imageContainer.className = "game-over-container";
 
-    // ボタンコンテナを作成
     const buttonContainer = document.createElement("div");
     buttonContainer.className = "game-over-buttons";
 
-    // もう一度ボタン
     const retryBtn = document.createElement("button");
     retryBtn.className = "game-over-button";
     retryBtn.textContent = "もう一度";
@@ -1198,11 +1099,10 @@ document.addEventListener("DOMContentLoaded", () => {
       overlay.classList.add("fade-out");
       setTimeout(() => {
         document.body.removeChild(overlay);
-        setupGameForLevel(currentLevel); // 現在のレベルでリトライ
+        setupGameForLevel(currentLevel);
       }, 500);
     });
 
-    // タイトルに戻るボタンに変更（ステージセレクトボタンを廃止）
     const backToTitleBtn = document.createElement("button");
     backToTitleBtn.className = "game-over-button";
     backToTitleBtn.textContent = "タイトルに戻る";
@@ -1210,7 +1110,6 @@ document.addEventListener("DOMContentLoaded", () => {
       overlay.classList.add("fade-out");
       setTimeout(() => {
         document.body.removeChild(overlay);
-        // ゲーム状態をクリアしてからタイトルに戻る
         localStorage.removeItem("zooEscapeGameState");
         hideGameElements();
         showHomeScreen();
@@ -1218,24 +1117,19 @@ document.addEventListener("DOMContentLoaded", () => {
       }, 500);
     });
 
-    // ボタンをコンテナに追加
     buttonContainer.appendChild(retryBtn);
     buttonContainer.appendChild(backToTitleBtn);
 
-    // 要素を組み立て
     imageContainer.appendChild(gameOverImg);
     imageContainer.appendChild(buttonContainer);
     overlay.appendChild(imageContainer);
 
-    // ボディに追加
     document.body.appendChild(overlay);
 
-    // アニメーション開始
     setTimeout(() => {
       overlay.classList.add("show");
     }, 50);
 
-    // 2秒後にボタンを表示
     setTimeout(() => {
       buttonContainer.classList.add("show-button");
     }, 2000);

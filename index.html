@@ -54,6 +54,7 @@
         </div>
         <div class="stage-select-group">
             <button id="stage-select-btn">ステージセレクト</button>
+            <button id="ranking-btn">ランキング</button>
             <button id="back-to-title-btn">タイトルに戻る</button>
         </div>
     </div>
@@ -70,15 +71,28 @@
         </div>
     </div>
 
-    <div id="ranking-container" style="display: none;">
-        <div id="progress-display">
-            <h3>🏆 進捗状況</h3>
-            <div id="progress-text">到達ステージ: <span id="max-reached-level">1</span></div>
+    <!-- ランキングモーダル -->
+    <div id="ranking-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content ranking-modal-content">
+            <h2>🏆 ランキング</h2>
+            
+            <div class="ranking-section">
+                <div id="progress-display">
+                    <h3>進捗状況</h3>
+                    <div id="progress-text">到達ステージ: <span id="max-reached-level">1</span></div>
+                </div>
+                
+                <h3>スコアランキング</h3>
+                <ul id="ranking-list"></ul>
+            </div>
+            
+            <div class="ranking-modal-buttons">
+                <button id="clear-ranking-btn">ランキングをクリア</button>
+                <button id="ranking-close-btn" class="modal-btn secondary">戻る</button>
+            </div>
         </div>
-        <h2>ランキング</h2>
-        <ul id="ranking-list"></ul>
-        <button id="clear-ranking-btn">ランキングをクリア</button>
     </div>
+
     <script src="script.js"></script>
     <audio id="bgm" src="audio/bgm.mp3" loop></audio>
     <audio id="se-click" src="audio/se_click.mp3"></audio>

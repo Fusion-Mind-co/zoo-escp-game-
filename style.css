@@ -412,6 +412,7 @@ body.game-mode {
 .stage-select-group {
     display: flex;
     justify-content: center;
+    gap: 15px;
 }
 
 button {
@@ -473,79 +474,16 @@ button:disabled {
     background: linear-gradient(145deg, #42A5F5 0%, #2196F3 100%);
 }
 
-#ranking-container {
-    margin-top: 30px;
-    width: 100%;
-    max-width: 600px;
-    border: 3px solid #8B4513;
-    padding: 25px;
-    border-radius: 20px;
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(10px);
-    box-shadow: 
-        0 8px 32px rgba(0, 0, 0, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 0.8);
-}
-
-#progress-display {
-    background: rgba(76, 175, 80, 0.1);
-    border: 2px solid #4CAF50;
-    border-radius: 15px;
-    padding: 20px;
-    margin-bottom: 25px;
-    text-align: center;
-}
-
-#progress-display h3 {
-    margin: 0 0 10px 0;
-    color: #2E7D32;
-    font-size: 20px;
-    font-weight: bold;
-}
-
-#progress-text {
-    font-size: 18px;
-    color: #2E7D32;
-    font-weight: bold;
-}
-
-#ranking-container h2 {
-    text-align: center;
-    margin-top: 0;
-    margin-bottom: 20px;
-    color: #2E7D32;
-    font-size: 24px;
-}
-
-#ranking-list {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 20px 0;
-}
-
-#ranking-list li {
-    display: flex;
-    justify-content: space-between;
-    padding: 12px 0;
-    border-bottom: 1px dashed #ccc;
-    font-size: 16px;
-}
-
-#ranking-list li:last-child {
-    border-bottom: none;
-}
-
-#clear-ranking-btn {
-    display: block;
-    margin: 0 auto;
-    padding: 10px 20px;
-    background: linear-gradient(145deg, #f44336 0%, #d32f2f 100%);
+#ranking-btn {
+    background: linear-gradient(145deg, #FF9800 0%, #F57C00 100%);
     color: white;
-    font-size: 14px;
+    padding: 14px 35px;
+    font-size: 16px;
+    min-width: 180px;
 }
 
-#clear-ranking-btn:hover {
-    background: linear-gradient(145deg, #ef5350 0%, #f44336 100%);
+#ranking-btn:hover {
+    background: linear-gradient(145deg, #FFB74D 0%, #FF9800 100%);
 }
 
 /* モーダルスタイル */
@@ -581,6 +519,8 @@ button:disabled {
     border: 2px solid rgba(76, 175, 80, 0.3);
     transform: scale(0.8) translateY(20px);
     transition: all 0.3s ease;
+    max-height: 80vh;
+    overflow-y: auto;
 }
 
 .modal-overlay.show .modal-content {
@@ -653,6 +593,76 @@ button:disabled {
     box-shadow: 
         0 6px 12px rgba(0, 0, 0, 0.25),
         inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* ランキングモーダル専用スタイル */
+.ranking-modal-content {
+    min-width: 500px;
+    max-width: 600px;
+}
+
+.ranking-section {
+    margin-bottom: 25px;
+}
+
+#progress-display {
+    background: rgba(76, 175, 80, 0.1);
+    border: 2px solid #4CAF50;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+#progress-display h3 {
+    margin: 0 0 10px 0;
+    color: #2E7D32;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#progress-text {
+    font-size: 18px;
+    color: #2E7D32;
+    font-weight: bold;
+}
+
+#ranking-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px 0;
+    text-align: left;
+}
+
+#ranking-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px dashed #ccc;
+    font-size: 16px;
+}
+
+#ranking-list li:last-child {
+    border-bottom: none;
+}
+
+.ranking-modal-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+#clear-ranking-btn {
+    background: linear-gradient(145deg, #f44336 0%, #d32f2f 100%);
+    color: white;
+    font-size: 14px;
+    padding: 10px 20px;
+    margin: 0;
+}
+
+#clear-ranking-btn:hover {
+    background: linear-gradient(145deg, #ef5350 0%, #f44336 100%);
 }
 
 /* ステージクリアアニメーション */
@@ -1147,6 +1157,17 @@ button:disabled {
         margin: 0;
     }
     
+    .stage-select-group {
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+    }
+    
+    .stage-select-group button {
+        width: 100%;
+        margin: 0;
+    }
+    
     .clear-buttons {
         flex-direction: column;
         gap: 15px;
@@ -1176,6 +1197,11 @@ button:disabled {
         min-width: 90%;
         max-width: 400px;
         padding: 30px 20px;
+    }
+    
+    .ranking-modal-content {
+        min-width: 90%;
+        max-width: 400px;
     }
     
     .stage-image {
