@@ -1,96 +1,138 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Zoo Escape</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
     <!-- ホーム画面 -->
     <div id="home-screen">
-        <div class="home-container">
-            <div class="logo-container">
-                <img src="image/ZOO_ESCAPE.png" alt="Zoo Escape" class="game-logo">
-            </div>
-            <div class="home-buttons">
-                <!-- 初回プレイ時 -->
-                <button id="start-new-game-btn" class="home-btn primary" style="display: none;">はじめる</button>
-                
-                <!-- 続きから可能な場合 -->
-                <button id="continue-game-btn" class="home-btn primary" style="display: none;">つづきから</button>
-                <button id="home-stage-select-btn" class="home-btn secondary" style="display: none;">ステージセレクト</button>
-            </div>
+      <div class="home-container">
+        <div class="logo-container">
+          <img src="image/ZOO_ESCAPE.png" alt="Zoo Escape" class="game-logo" />
         </div>
+        <div class="home-buttons">
+          <!-- 初回プレイ時 -->
+          <button
+            id="start-new-game-btn"
+            class="home-btn primary"
+            style="display: none"
+          >
+            はじめる
+          </button>
+
+          <!-- 続きから可能な場合 -->
+          <button
+            id="continue-game-btn"
+            class="home-btn primary"
+            style="display: none"
+          >
+            つづきから
+          </button>
+          <button
+            id="home-stage-select-btn"
+            class="home-btn secondary"
+            style="display: none"
+          >
+            ステージセレクト
+          </button>
+        </div>
+      </div>
     </div>
 
-    <div class="header" style="display: none;">
-        <img src="image/ZOO_ESCAPE.png" alt="Zoo Escape" class="header-logo">
-        <div class="level-display">
-            <span>レベル: </span>
-            <span id="current-level">1</span>
-        </div>
-        <div class="coin-display">
-            <span>コイン: </span>
-            <span id="coin-count">100</span>
-        </div>
+    <!-- ヘッダー -->
+    <div class="header" style="display: none">
+      <img src="image/ZOO_ESCAPE.png" alt="Zoo Escape" class="header-logo" />
+      <div class="level-display">
+        <span>レベル: </span>
+        <span id="current-level">1</span>
+      </div>
+      <div class="coin-display">
+        <span>コイン: </span>
+        <span id="coin-count">100</span>
+      </div>
     </div>
-    <div id="game-board" style="display: none;"></div>
 
-    <div id="level-selection" style="display: none;">
+    <!-- ゲームエリア -->
+    <div class="game-area">
+      <!-- level-selectionは上に配置 -->
+      <div id="level-selection" style="display: none">
         <h2>ステージを選択</h2>
         <select id="start-level-select"></select>
         <button id="start-game-btn">ゲーム開始</button>
-    </div>
-    <div id="slot-container" style="display: none;">
-        <div id="slot"></div>
-    </div>
-    <div id="controls" style="display: none;">
+      </div>
+
+      <!-- gameboardとslotを横並びにするコンテナ -->
+      <div class="game-content">
+        <div id="game-board" style="display: none"></div>
+        
+        <div id="slot-container" style="display: none">
+          <div id="slot"></div>
+        </div>
+      </div>
+
+      <!-- controlsは下に配置 -->
+      <div id="controls" style="display: none">
         <div class="control-group">
-            <button id="undo-btn">一手戻す <span class="cost">(10コイン)</span></button>
-            <button id="shuffle-btn">シャッフル <span class="cost">(30コイン)</span></button>
-            <button id="hint-btn">ヒント <span class="cost">(20コイン)</span></button>
-            <button id="reset-btn">リセット</button>
+          <button id="undo-btn">
+            一手戻す <span class="cost">(10コイン)</span>
+          </button>
+          <button id="shuffle-btn">
+            シャッフル <span class="cost">(30コイン)</span>
+          </button>
+          <button id="hint-btn">
+            ヒント <span class="cost">(20コイン)</span>
+          </button>
+          <button id="reset-btn">リセット</button>
         </div>
         <div class="stage-select-group">
-            <button id="stage-select-btn">ステージセレクト</button>
-            <button id="ranking-btn">ランキング</button>
-            <button id="back-to-title-btn">タイトルに戻る</button>
+          <button id="stage-select-btn">ステージセレクト</button>
+          <button id="ranking-btn">ランキング</button>
+          <button id="back-to-title-btn">タイトルに戻る</button>
         </div>
+      </div>
     </div>
 
     <!-- ステージセレクトモーダル -->
-    <div id="stage-select-modal" class="modal-overlay" style="display: none;">
-        <div class="modal-content">
-            <h2>ステージセレクト</h2>
-            <select id="modal-level-select"></select>
-            <div class="modal-buttons">
-                <button id="modal-start-btn" class="modal-btn primary">決定</button>
-                <button id="modal-cancel-btn" class="modal-btn secondary">戻る</button>
-            </div>
+    <div id="stage-select-modal" class="modal-overlay" style="display: none">
+      <div class="modal-content">
+        <h2>ステージセレクト</h2>
+        <select id="modal-level-select"></select>
+        <div class="modal-buttons">
+          <button id="modal-start-btn" class="modal-btn primary">決定</button>
+          <button id="modal-cancel-btn" class="modal-btn secondary">
+            戻る
+          </button>
         </div>
+      </div>
     </div>
 
     <!-- ランキングモーダル -->
-    <div id="ranking-modal" class="modal-overlay" style="display: none;">
-        <div class="modal-content ranking-modal-content">
-            <h2>🏆 ランキング</h2>
-            
-            <div class="ranking-section">
-                <div id="progress-display">
-                    <h3>進捗状況</h3>
-                    <div id="progress-text">到達ステージ: <span id="max-reached-level">1</span></div>
-                </div>
-                
-                <h3>スコアランキング</h3>
-                <ul id="ranking-list"></ul>
+    <div id="ranking-modal" class="modal-overlay" style="display: none">
+      <div class="modal-content ranking-modal-content">
+        <h2>🏆 ランキング</h2>
+
+        <div class="ranking-section">
+          <div id="progress-display">
+            <h3>進捗状況</h3>
+            <div id="progress-text">
+              到達ステージ: <span id="max-reached-level">1</span>
             </div>
-            
-            <div class="ranking-modal-buttons">
-                <button id="clear-ranking-btn">ランキングをクリア</button>
-                <button id="ranking-close-btn" class="modal-btn secondary">戻る</button>
-            </div>
+          </div>
+
+          <h3>スコアランキング</h3>
+          <ul id="ranking-list"></ul>
         </div>
+
+        <div class="ranking-modal-buttons">
+          <button id="clear-ranking-btn">ランキングをクリア</button>
+          <button id="ranking-close-btn" class="modal-btn secondary">
+            戻る
+          </button>
+        </div>
+      </div>
     </div>
 
     <script src="script.js"></script>
@@ -101,5 +143,5 @@
     <audio id="se-win" src="audio/se_win.mp3"></audio>
     <audio id="se-hint" src="audio/se_hint.mp3"></audio>
     <audio id="se-shuffle" src="audio/se_shuffle.mp3"></audio>
-</body>
+  </body>
 </html>

@@ -580,7 +580,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function getLevelConfig(level) {
     switch (level) {
       case 1:
-        return { tileCount: 60, tileTypesCount: 10 };
+        return { tileCount: 15, tileTypesCount: 5 };
       case 2:
         return { tileCount: 72, tileTypesCount: 12 };
       case 3:
