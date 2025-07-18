@@ -45,8 +45,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // Game Constants
   const TILE_WIDTH = 50;
   const TILE_HEIGHT = 50;
-  const BOARD_WIDTH = 550;
-  const BOARD_HEIGHT = 400;
+  const BOARD_WIDTH = 500;
+  const BOARD_HEIGHT = 500;
   const ALL_TILE_TYPES = [
     "🐶", "🐱", "🐭", "🐹", "🐰", "🦊", "🐻", "🐼", "🐨", "🐯",
     "🦁", "🐮", "🐷", "🐸", "🐵", "🐔", "🐧", "🐦", "🐤", "🦆",
